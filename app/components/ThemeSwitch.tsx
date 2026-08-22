@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
 
@@ -7,74 +7,47 @@ type theme = "dark" | "light" | "";
 function ThemeSwitch() {
   const [theme, setTheme] = useState<theme>("");
   const [open, setOpen] = useState<boolean>(false);
-  const ThemeSwitchHandle = (theme: string) => {
-    if (theme === "light") {
-      setTheme("light");
-      window.localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
-    } else if (theme === "system") {
-      detectTheme();
-    } else {
-      setTheme("dark");
-      window.localStorage.setItem("theme", "dark");
+
+  const applyTheme = (theme: "dark" | "light") => {
+    setTheme(theme);
+    window.localStorage.setItem("theme", theme);
+    if (theme === "dark") {
       document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  const handleSystemThemeChange = useCallback((e: MediaQueryListEvent) => {
+    applyTheme(e.matches ? "dark" : "light");
+  }, []);
+
+  useEffect(() => {
+    const themeFromLocal = window.localStorage.getItem("theme") as theme | null;
+    if (themeFromLocal) {
+      applyTheme(themeFromLocal === "dark" ? "dark" : "light");
+    } else {
+      const matches = window.matchMedia("(prefers-color-scheme: dark)");
+      applyTheme(matches.matches ? "dark" : "light");
     }
 
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    return () =>
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+  }, [handleSystemThemeChange]);
+
+  const ThemeSwitchHandle = (theme: string) => {
+    if (theme === "light") {
+      applyTheme("light");
+    } else if (theme === "system") {
+      const matches = window.matchMedia("(prefers-color-scheme: dark)");
+      applyTheme(matches.matches ? "dark" : "light");
+    } else {
+      applyTheme("dark");
+    }
     setOpen(false);
   };
-  const detectTheme = () => {
-    const matches = window.matchMedia("(prefers-color-scheme: dark)");
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", ({ matches }) => {
-        if (matches) {
-          setTheme("dark");
-          window.localStorage.setItem("theme", "dark");
-          document.documentElement.classList.add("dark");
-        } else {
-          setTheme("light");
-          window.localStorage.setItem("theme", "light");
-          document.documentElement.classList.remove("dark");
-        }
-      });
-    if (matches.matches) {
-      setTheme("dark");
-      window.localStorage.setItem("theme", "dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setTheme("light");
-      window.localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
-    }
-  };
-  useEffect(() => {
-    const themeFormLocal = window.localStorage.getItem("theme") as theme | null;
-    if (themeFormLocal) {
-      if (themeFormLocal == "dark") {
-        setTheme(themeFormLocal);
-        document.documentElement.classList.add("dark");
-      } else {
-        setTheme(themeFormLocal);
-        document.documentElement.classList.remove("dark");
-      }
-    } else {
-      console.log("no local");
-      detectTheme();
-    }
-    return window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .removeEventListener("change", ({ matches }) => {
-        if (matches) {
-          setTheme("dark");
-          window.localStorage.setItem("theme", "dark");
-          document.documentElement.classList.add("dark");
-        } else {
-          setTheme("light");
-          window.localStorage.setItem("theme", "light");
-          document.documentElement.classList.remove("dark");
-        }
-      });
-  }, []);
 
   return (
     <div className="z-[60] fixed bottom-8 right-10 transition-all">
