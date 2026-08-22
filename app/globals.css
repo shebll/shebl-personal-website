@@ -22,7 +22,9 @@
 
 /* selection text  and html and body style*/
 ::selection {
-  text-shadow: 0 0 6px #86b0f0, 0 0 20px rgba(75, 111, 230, 0.747);
+  text-shadow:
+    0 0 6px #86b0f0,
+    0 0 20px rgba(75, 111, 230, 0.747);
   color: rgb(51, 49, 85);
 }
 html {
@@ -268,6 +270,31 @@ html {
 /* bg  */
 
 /* marked text */
+
+/* Reduced motion — disable heavy animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hi,
+  .spotlight,
+  .slider-track,
+  .marked::after {
+    animation: none !important;
+    -webkit-animation: none !important;
+  }
+  .marked::after {
+    transform: translateY(3px) scaleX(1) rotateX(30.18297deg) translateZ(3px)
+      rotate(0deg);
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
 .marked {
   @apply font-bold text-white;
   display: inline-block;
