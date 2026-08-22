@@ -4,11 +4,15 @@ import { m, motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import React, { useRef } from "react";
 
+import { siteData } from "@/src/data/site";
+
 function Resume() {
   const { refSection } = useActiveSectionInView({
     sectionName: "Resume",
     amount: 0.1,
   });
+
+  const { cv } = siteData;
 
   const refText = useRef(null);
   const { scrollYProgress: s1 } = useScroll({
@@ -41,10 +45,9 @@ function Resume() {
   const transform = useTransform(s1, [0, 1], ["0px", "900px"]);
 
   const transformZ2 = useTransform(s2, [0, 1], [-100, 0]);
-
   const transformZ3 = useTransform(s3, [0, 1], [-100, 0]);
-
   const transformZ4 = useTransform(s4, [0, 1], [0, 1]);
+
   return (
     <section
       id="resume"
@@ -54,6 +57,7 @@ function Resume() {
         perspective: "1000px",
       }}
     >
+      {/* Desktop 3D CV animation */}
       <motion.div
         className="relative z-10 hidden cv md:block"
         ref={refImg2}
@@ -62,7 +66,7 @@ function Resume() {
         <div className="relative z-20 front">
           <Image
             src={"/personalImages/11.jpg"}
-            alt="1Resume image"
+            alt="Ahmed Shebl resume preview"
             width={900}
             height={700}
             quality={92}
@@ -70,13 +74,13 @@ function Resume() {
         </div>
         <div className="subCv dark:bg-[#090c13] bg-[#f9fafb] z-10 relative">
           <motion.div
-            className="origin-top middle "
+            className="origin-top middle"
             style={{ rotateX: transformZ2 }}
             ref={refImg3}
           >
             <Image
               src={"/personalImages/22.jpg"}
-              alt="1Resume image"
+              alt="Ahmed Shebl resume preview"
               width={900}
               height={700}
               quality={92}
@@ -89,7 +93,7 @@ function Resume() {
         >
           <Image
             src={"/personalImages/33.jpg"}
-            alt="1Resume image"
+            alt="Ahmed Shebl resume preview"
             width={900}
             height={700}
             quality={92}
@@ -98,15 +102,16 @@ function Resume() {
       </motion.div>
       <div
         ref={refText}
-        className="downloadCv text-gray-500 text-4xl md:text-7xl font-bold flex flex-col justify-center items-center gap-4 uppercase  mt-[70px] md:mt-[200px] z-20 relative text-center "
+        className="downloadCv text-gray-500 text-4xl md:text-7xl font-bold flex flex-col justify-center items-center gap-4 uppercase mt-[70px] md:mt-[200px] z-20 relative text-center"
       >
         A little
         <br />
         memory!
-        <a className="btn primary" href="files/AhmedResume.pdf" download={true}>
-          DOWNLOAD MY CV
+        <a className="btn primary" href={cv.url} download={true}>
+          {cv.downloadLabel}
         </a>
       </div>
+      {/* Mobile CV preview — simpler, no heavy 3D animation */}
       <motion.div
         style={{
           rotateX: rotate,
@@ -117,7 +122,7 @@ function Resume() {
       >
         <Image
           src={"/personalImages/Ahmed_ResumeH1.jpg"}
-          alt="1Resume image"
+          alt="Ahmed Shebl resume preview"
           width={900}
           height={700}
           quality={92}

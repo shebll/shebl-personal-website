@@ -3,24 +3,17 @@ import useActiveSectionInView from "@/utils/hooks/useActiveSectionInView";
 import { variantsQ } from "@/utils/motion/variants";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-function calculateAge(birthDate: Date) {
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDifference = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDifference < 0 ||
-    (monthDifference === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    age--;
-  }
-  return age;
-}
+import { siteData } from "@/src/data/site";
+import { formatAboutParagraph } from "@/src/lib/portfolio";
+import HighlightedText from "@/src/components/HighlightedText";
 
 function About() {
   const { refSection } = useActiveSectionInView({
     sectionName: "About",
     amount: 0.5,
   });
+
+  const { about } = siteData;
 
   const { scrollYProgress } = useScroll({
     target: refSection,
@@ -39,7 +32,7 @@ function About() {
   const Q4TranslateX = useTransform(
     scrollYProgress,
     [0, 1],
-    ["-20px", "-300px"]
+    ["-20px", "-300px"],
   );
   const Q4Rotate = useTransform(scrollYProgress, [0, 1], [-28, 26]);
   //////////
@@ -47,6 +40,38 @@ function About() {
   const Q5TranslateY = useTransform(scrollYProgress, [0, 1], ["-80px", "56px"]);
   const Q5Rotate = useTransform(scrollYProgress, [0, 1], [3, -15]);
   //////////
+
+  const questions = [
+    {
+      text: about.questions[0],
+      style: { rotate: Q1Rotate, translateX: Q1TranslateX },
+      className: "top-[14%] right-0",
+    },
+    {
+      text: about.questions[1],
+      style: { rotate: Q2Rotate, translateX: Q2TranslateX },
+      className: "top-[22%] left-0",
+    },
+    {
+      text: about.questions[2],
+      style: { rotate: Q3Rotate, translateX: Q3TranslateX },
+      className: "top-[40%] right-2",
+    },
+    {
+      text: about.questions[3],
+      style: { rotate: Q4Rotate, translateX: Q4TranslateX },
+      className: "top-[46%] left-2",
+    },
+    {
+      text: about.questions[4],
+      style: {
+        rotate: Q5Rotate,
+        translateX: Q5TranslateX,
+        translateY: Q5TranslateY,
+      },
+      className: "bottom-[10%] left-10",
+    },
+  ];
 
   return (
     <section
@@ -58,84 +83,37 @@ function About() {
     >
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 id="about-me-section" tabIndex={0} className="headerText">
-          About Me
+          {about.title}
         </h1>
         <p tabIndex={0} className="subText">
-          Answers To All Questions In Your Mind .
+          {about.subtitle}
         </p>
       </div>
       <div className="w-full md:w-[650px] flex flex-col gap-4">
         <h2 className="paragraph dark:!text-gray-50" tabIndex={0}>
-          My name is Ahmed Mohamed, and I&apos;m a{" "}
-          {calculateAge(new Date(2001, 11, 26))}-year-old graduate in Computer
-          Science from Cairo University , specializing in Information Systems. I
-          reside in Cairo, Egypt.
+          {formatAboutParagraph(about.paragraphs[0])}
         </h2>
         <h3 className="paragraph dark:!text-gray-50" tabIndex={0}>
-          specializing in{" "}
-          <span className="font-bold marked">Front-End Development</span> with a
-          solid foundation in backend technologies. With 1 year of experience, I
-          creating responsive, interactive , seamless , scalable, and
-          high-performance websites and mobile applications. My expertise
-          includes React and Next.js, and I am passionate about delivering
-          modern, user-friendly web solutions.
+          <HighlightedText
+            text={about.paragraphs[1]}
+            highlightedWords={about.highlightedWords}
+          />
         </h3>
       </div>
-      <div className="hidden lg:block ">
-        <motion.p
-          variants={variantsQ}
-          initial={"hidden"}
-          whileInView={"show"}
-          style={{ rotate: Q1Rotate, translateX: Q1TranslateX }}
-          className="Question top-[14%] right-0
-        "
-        >
-          What Are You Study ?
-        </motion.p>
-        <motion.p
-          variants={variantsQ}
-          initial={"hidden"}
-          whileInView={"show"}
-          style={{ rotate: Q2Rotate, translateX: Q2TranslateX }}
-          className="Question top-[22%] left-0
-        "
-        >
-          What Is Your Passion ?
-        </motion.p>
-        <motion.p
-          variants={variantsQ}
-          initial={"hidden"}
-          whileInView={"show"}
-          style={{ rotate: Q3Rotate, translateX: Q3TranslateX }}
-          className="Question top-[40%] right-2
-        "
-        >
-          How Old Are You ?
-        </motion.p>
-        <motion.p
-          variants={variantsQ}
-          initial={"hidden"}
-          whileInView={"show"}
-          style={{ rotate: Q4Rotate, translateX: Q4TranslateX }}
-          className="Question top-[46%] left-2
-        "
-        >
-          Where do you reside?
-        </motion.p>
-        <motion.p
-          variants={variantsQ}
-          initial={"hidden"}
-          whileInView={"show"}
-          style={{
-            rotate: Q5Rotate,
-            translateX: Q5TranslateX,
-            translateY: Q5TranslateY,
-          }}
-          className="Question bottom-[10%] left-10
-        "
-        >
-          Which university are you attending ?
-        </motion.p>
+      {/* Parallax questions — desktop only, hidden on mobile for performance */}
+      <div className="hidden lg:block">
+        {questions.map((q, index) => (
+          <motion.p
+            key={index}
+            variants={variantsQ}
+            initial={"hidden"}
+            whileInView={"show"}
+            style={q.style}
+            className={`Question ${q.className}`}
+          >
+            {q.text}
+          </motion.p>
+        ))}
       </div>
     </section>
   );

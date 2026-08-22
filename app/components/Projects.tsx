@@ -1,5 +1,5 @@
 "use client";
-import { projectsData } from "@/lib/data";
+import { projectsData } from "@/src/data/projects";
 import React from "react";
 import Project from "./Project";
 import useActiveSectionInView from "@/utils/hooks/useActiveSectionInView";
@@ -10,6 +10,9 @@ function Projects() {
     sectionName: "Projects",
     amount: 0.13,
   });
+
+  // Only show featured projects on the homepage.
+  const featuredProjects = projectsData.filter((project) => project.featured);
   const { scrollYProgress } = useScroll({
     target: refSection,
     offset: ["start start", "end end"],
@@ -31,13 +34,13 @@ function Projects() {
           Every Project Pice Of Art .
         </p>
       </div>
-      {projectsData.map((project, index) => (
-        <React.Fragment key={index}>
+      {featuredProjects.map((project, index) => (
+        <React.Fragment key={project.slug}>
           <Project
             project={project}
             index={index}
-            range={[index / projectsData.length, 1]}
-            target={1 - (projectsData.length - index) * 0.05}
+            range={[index / featuredProjects.length, 1]}
+            target={1 - (featuredProjects.length - index) * 0.05}
             progress={scrollYProgress}
           />
         </React.Fragment>

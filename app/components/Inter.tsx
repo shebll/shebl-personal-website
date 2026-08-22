@@ -11,11 +11,16 @@ import useActiveSectionInView from "@/utils/hooks/useActiveSectionInView";
 import Image from "next/image";
 import Link from "next/link";
 
+import { siteData } from "@/src/data/site";
+import HighlightedText from "@/src/components/HighlightedText";
+
 function Inter() {
   const { refSection } = useActiveSectionInView({
     sectionName: "Home",
     amount: 0.5,
   });
+
+  const { personal, hero, social, cv } = siteData;
 
   return (
     <section role="region" aria-label="intro section">
@@ -32,13 +37,13 @@ function Inter() {
               tabIndex={0}
             >
               <Image
-                src={"/personalImages/shebllImage.png"}
-                alt="Ahmed Shebll personal image"
+                src={personal.image}
+                alt={`${personal.name} personal image`}
                 priority={true}
                 quality={92}
                 width={150}
                 height={100}
-                className="rounded-full bg-cover border-[3px] border-white shadow-xl pointer-events-none "
+                className="rounded-full bg-cover border-[3px] border-white shadow-xl pointer-events-none"
               />
             </m.div>
             <m.span
@@ -61,10 +66,16 @@ function Inter() {
                 animate={"animate"}
                 className="py-4 text-4xl font-bold text-center text-transparent bg-opacity-50 md:text-7xl bg-clip-text bg-gradient-to-b from-[#141414] to-neutral-400/5 dark:from-neutral-50 dark:to-neutral-400/5"
               >
-                Hey, I&apos;m <span className="font-bold ">Ahmed Shebl</span>
+                <HighlightedText
+                  text={hero.title}
+                  highlightedWords={[personal.name]}
+                />
                 <div className="br"></div>
-                I&apos;m a junior{" "}
-                <span className="font-bold ">Software Engineer </span>{" "}
+                {"I'm a junior"}{" "}
+                <HighlightedText
+                  text={hero.highlightedWords.join(" ")}
+                  highlightedWords={hero.highlightedWords}
+                />{" "}
               </m.h1>
               <m.p
                 variants={TextVariants}
@@ -72,12 +83,10 @@ function Inter() {
                 animate={"animate"}
                 className="max-w-2xl mx-auto mt-4 text-lg font-normal text-center text-gray-600 dark:text-neutral-300"
               >
-                I specialize in{" "}
-                <span className=" marked"> Front-End Development</span> with
-                expertise in{" "}
-                <span className="font-bold marked ">React and Next.js</span>,
-                creating responsive, interactive, seamless, scalable, and
-                high-performance websites and mobile applications
+                <HighlightedText
+                  text={hero.description}
+                  highlightedWords={hero.descriptionHighlightedWords}
+                />
               </m.p>
             </div>
             <m.div
@@ -90,49 +99,53 @@ function Inter() {
                 href={"#contact"}
                 className="flex items-center justify-center btn primary"
               >
-                Contact Me here
-                <span className="text-[22px] relative top-[-3px]">📨</span>
+                {hero.buttons.contact.label}
+                <span className="text-[22px] relative top-[-3px]">
+                  {hero.buttons.contact.icon}
+                </span>
               </Link>
               <a
                 className="flex items-center justify-center btn"
-                href="files/AhmedResume.pdf"
+                href={cv.url}
                 download={true}
               >
-                Download CV
-                <span className="text-[19.5px]">📑</span>
+                {hero.buttons.downloadCv.label}
+                <span className="text-[19.5px]">
+                  {hero.buttons.downloadCv.icon}
+                </span>
               </a>
               <Link
                 className="flex items-center justify-center rounded-full btn"
-                href={"https://www.linkedin.com/in/ahmed-shebl-07a331268/"}
+                href={social.linkedin}
                 target="blank"
               >
                 <Image
                   src={"/skillsSVG/icon-linkedin.svg"}
-                  alt="Git logo"
+                  alt="LinkedIn logo"
                   width={26}
                   height={26}
                 />
               </Link>
               <Link
                 className="flex items-center justify-center btn"
-                href={"https://github.com/shebll"}
+                href={social.github}
                 target="blank"
               >
                 <Image
                   src={"/skillsSVG/icons8-git.svg"}
-                  alt="Git logo"
+                  alt="GitHub logo"
                   width={26}
                   height={26}
                 />
               </Link>
               <Link
                 className="flex items-center justify-center btn"
-                href={"https://www.upwork.com/freelancers/~014ebf95d7586f1308"}
+                href={social.upwork}
                 target="blank"
               >
                 <Image
                   src={"/skillsSVG/upwork.png"}
-                  alt="upwork logo"
+                  alt="Upwork logo"
                   width={24}
                   height={24}
                 />
