@@ -66,16 +66,9 @@ function Inter() {
                 animate={"animate"}
                 className="py-4 text-4xl font-bold text-center text-transparent bg-opacity-50 md:text-7xl bg-clip-text bg-gradient-to-b from-[#141414] to-neutral-400/5 dark:from-neutral-50 dark:to-neutral-400/5"
               >
-                <HighlightedText
-                  text={hero.title}
-                  highlightedWords={[personal.name]}
-                />
+                Hey, I&apos;m Ahmed Shebl
                 <div className="br"></div>
-                {"I'm a junior"}{" "}
-                <HighlightedText
-                  text={hero.highlightedWords.join(" ")}
-                  highlightedWords={hero.highlightedWords}
-                />{" "}
+                {"I'm a "} {hero.highlightedWords.join(" ")}
               </m.h1>
               <m.p
                 variants={TextVariants}

@@ -28,6 +28,7 @@ function Project({ project, index, range, target, progress }: props) {
   });
   const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
   const imageBlur = useTransform(scrollYProgress, [0, 1], [4, 0]);
+  const imageFilter = useTransform(imageBlur, (value) => `blur(${value}px)`);
   const scale = useTransform(progress, range, [1, target]);
 
   return (
@@ -46,11 +47,11 @@ function Project({ project, index, range, target, progress }: props) {
         <p className="bg-transparent border-white rounded-full border-[1px] py-1 px-6 font-semibold w-fit">
           {project.category}
         </p>
-        <h1 className="text-2xl md:text-3xl font-bold uppercase" tabIndex={0}>
+        <h1 className="text-2xl font-bold uppercase md:text-3xl" tabIndex={0}>
           {project.title}
         </h1>
         <p
-          className="text-base md:text-lg font-medium dark:text-gray-300"
+          className="text-base font-medium md:text-lg dark:text-gray-300"
           tabIndex={0}
         >
           {project.shortDescription}
@@ -109,7 +110,7 @@ function Project({ project, index, range, target, progress }: props) {
       <motion.div
         style={{
           opacity: scrollYProgress,
-          filter: useTransform(imageBlur, (value) => `blur(${value}px)`),
+          filter: imageFilter,
         }}
         className="relative flex-1 hidden m-4 overflow-hidden shadow-2xl md:block rounded-2xl h-[300px]"
       >
