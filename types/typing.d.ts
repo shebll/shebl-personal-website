@@ -1,3 +1,3 @@
-import { links } from "@/lib/data"
+import type { SectionName } from "@/src/types/portfolio";
 
-export type sectionsName = (typeof links[number])["name"]
+export type sectionsName = SectionName;
